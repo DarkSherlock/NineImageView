@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="placeholder">#33000000</color>
+    <color name="transparent90_white">#E5ffffff</color>
+    <color name="placeholder_yellow">#33fbc02d</color>
+    <color name="placeholder_orange">#33f57c00</color>
+    <color name="text_color_black_58585a">#58585a</color>
+    <color name="default_bg">#f3f4f6</color>
+    <color name="text_color_black_151515">#151515</color>
+</resources>

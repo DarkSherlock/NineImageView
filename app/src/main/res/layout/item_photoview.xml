@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.liang.tind.nineimageview.widget.photoview.PhotoView
+        android:id="@+id/photoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <com.shizhefei.view.largeimage.LargeImageView
+        android:id="@+id/largeImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
+
+    <com.sunfusheng.glideimageview.progress.CircleProgressView
+        android:id="@+id/progressView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:progress="0"
+        app:cpv_innerPadding="2dp"
+        app:cpv_outerColor="@color/transparent90_white"
+        app:cpv_outerSize="1dp"
+        app:cpv_progressNormalColor="@android:color/transparent"
+        app:cpv_progressReachColor="@color/transparent90_white"
+        app:cpv_progressStyle="FillInnerArc"/>
+
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_more"-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:layout_gravity="right"-->
+    <!--android:layout_marginRight="13dp"-->
+    <!--android:layout_marginTop="12dp"-->
+    <!--android:background="@drawable/bg_wb_tv_details"-->
+    <!--android:src="@mipmap/ic_more"/>-->
+</FrameLayout>
