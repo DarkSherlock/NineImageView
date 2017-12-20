@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -26,10 +26,13 @@ import com.liang.tind.nineimageview.widget.nineImageview.ImageAttr;
 import com.liang.tind.nineimageview.widget.photoview.OnOutsidePhotoTapListener;
 import com.liang.tind.nineimageview.widget.photoview.OnPhotoTapListener;
 import com.liang.tind.nineimageview.widget.photoview.PhotoView;
+import com.shizhefei.view.largeimage.BlockImageLoader;
 import com.shizhefei.view.largeimage.LargeImageView;
 import com.shizhefei.view.largeimage.factory.FileBitmapDecoderFactory;
 import com.sunfusheng.glideimageview.GlideImageLoader;
 import com.sunfusheng.glideimageview.progress.CircleProgressView;
+import com.sunfusheng.glideimageview.progress.OnProgressListener;
+import com.sunfusheng.glideimageview.progress.ProgressManager;
 import com.sunfusheng.glideimageview.util.DisplayUtil;
 
 import java.io.File;
@@ -107,26 +110,57 @@ public class NineImagesDetailAdapter extends PagerAdapter implements OnPhotoTapL
         CircleProgressView progressView = progressViews.get(position);
         progressView.setProgress(0);
         progressView.setVisibility(View.VISIBLE);
+        RequestOptions requestOptions =  RequestOptions.placeholderOf(R.color.placeholder)
+                .centerCrop()
+                .skipMemoryCache(false)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
         if (attr.isLongImage) {
+            OnProgressListener internalProgressListener = new OnProgressListener() {
+                @Override
+                public void onProgress(String imageUrl, long bytesRead, long totalBytes, boolean isDone, GlideException exception) {
+                    if (totalBytes == 0) return;
+                    if (!url.equals(imageUrl)) return;
+                    final int percent = (int) ((bytesRead * 1.0f / totalBytes) * 100.0f);
+                    progressView.setProgress(percent);
+                    if (isDone) {
+                        ProgressManager.removeProgressListener(this);
+                        progressView.setVisibility(View.GONE);
+                    }
+                }
+            };
+            ProgressManager.addProgressListener(internalProgressListener);
             Glide.with(mContext).downloadOnly().load(url).into(new SimpleTarget<File>() {
                 @Override
                 public void onResourceReady(File resource, Transition<? super File> transition) {
-                    ((LargeImageView) view).setImage(new FileBitmapDecoderFactory(resource));
+
+                    LargeImageView largeImageView = (LargeImageView) view;
+                    largeImageView.setOnLoadStateChangeListener(new BlockImageLoader.OnLoadStateChangeListener() {
+                        @Override
+                        public void onLoadStart(int loadType, Object param) {
+                            //这里设置的是假的百分比。因为加载bitmap file 是用系统的BitmapFactory.decodeFile（）
+                            // 暂时没办法监听到具体的进度
+                            progressView.setProgress(15);
+                            progressView.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onLoadFinished(int loadType, Object param, boolean success, Throwable throwable) {
+                            progressView.setProgress(100);
+                            progressView.setVisibility(View.GONE);
+                        }
+                    });
+                    largeImageView.setImage(new FileBitmapDecoderFactory(resource));
+
                 }
             });
         } else {
             PhotoView photoView = (PhotoView) view;
             GlideImageLoader imageLoader = GlideImageLoader.create( photoView);
             imageLoader.setOnGlideImageViewListener(url, (percent, isDone, exception) -> {
-                Log.e(TAG, "loadUrl: percent==" + percent + "isDone==" + isDone);
                 progressView.setProgress(percent);
                 progressView.setVisibility(isDone ? View.GONE : View.VISIBLE);
             });
-            RequestOptions requestOptions = imageLoader.requestOptions(R.color.placeholder)
-                    .centerCrop()
-                    .skipMemoryCache(false)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
             RequestBuilder<Drawable> requestBuilder = imageLoader.requestBuilder(url, requestOptions)
                     .transition(DrawableTransitionOptions.withCrossFade());
             requestBuilder.into(new SimpleTarget<Drawable>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {

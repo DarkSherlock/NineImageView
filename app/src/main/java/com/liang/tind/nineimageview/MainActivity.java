@@ -35,9 +35,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button buttonGif = findViewById(R.id.btn_1);
         Button buttonJpg = findViewById(R.id.btn_2);
         Button buttonLong = findViewById(R.id.btn_3);
+        Button btn4 = findViewById(R.id.btn_4);
         buttonGif.setOnClickListener(this);
         buttonJpg.setOnClickListener(this);
         buttonLong.setOnClickListener(this);
+        btn4.setOnClickListener(this);
 
         TextView tvTitle = findViewById(R.id.tv_title);
         tvTitle.setText("测试");
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_3:
                 setAdapter(longUrl,2);
+                break;
+            case R.id.btn_4:
+                setAdapter(jpg,12);
                 break;
 
         }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.liang.tind.nineimageview.NineImagesDetailActivity;
@@ -33,7 +32,6 @@ public class NineImageViewEventAdapter extends NineImageViewAdapter {
             imageView.getLocationInWindow(points);
             attr.left = points[0];
             attr.top = points[1];
-            Log.e(TAG, "onImageItemClick: "+attr.left+"y=="+attr.top);
         }
 
         Intent intent = new Intent(context, NineImagesDetailActivity.class);

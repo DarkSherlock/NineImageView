@@ -325,6 +325,7 @@ public class NineImageView extends ViewGroup {
         for (int i = 0; i < attrList.size(); i++) {
             ImageViewWrapper imageViewWrapper = imageViews.get(i);
             imageViewWrapper.setType(ImageViewWrapper.ImageType.IMAGE_TYPE_JPG);
+            imageViewWrapper.setMoreNum(0);
             imageViewWrapper.setImageDrawable(null);//重新下载 重置bitmap
             ImageAttr attr = attrList.get(i);
             attr.isLongImage = false;
@@ -339,6 +340,7 @@ public class NineImageView extends ViewGroup {
                 imageView.setMoreNum(adapter.getImageAttrs().size() - maxImageSize);
             }
         }
+
         imageAttrs.clear();
         imageAttrs.addAll(attrList);
         layoutChildrenView();
