@@ -69,7 +69,7 @@ public class NineImagesDetailAdapter extends PagerAdapter implements OnPhotoTapL
         super.setPrimaryItem(container, position, object);
     }
 
-    public View getLargeView(int index) {
+    public View getPhotoView(int index) {
         return mViews.get(index);
     }
 

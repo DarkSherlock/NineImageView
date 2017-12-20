@@ -103,7 +103,7 @@ public class NineImagesDetailActivity extends AppCompatActivity implements ViewT
     public boolean onPreDraw() {
         if (isAnimating) return true;
         rootView.getViewTreeObserver().removeOnPreDrawListener(this);
-        View view = mAdapter.getLargeView(curPosition);
+        View view = mAdapter.getPhotoView(curPosition);
         ImageAttr attr = imageAttrs.get(curPosition);
 
         initImageAttr(attr);
@@ -138,7 +138,7 @@ public class NineImagesDetailActivity extends AppCompatActivity implements ViewT
 
     public void finishWithAnim() {
         if (isAnimating) return;
-        View view = mAdapter.getLargeView(curPosition);
+        View view = mAdapter.getPhotoView(curPosition);
         if (view instanceof PhotoView) {
             ((PhotoView) view).setScale(1f);
         } else if (view instanceof LargeImageView) {
